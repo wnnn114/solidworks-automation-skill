@@ -2,6 +2,10 @@
 
 本文沉淀 SolidWorks 2024 SP3.1 + Python 3.13 + pywin32 实测通过的 Motion Study 自动化流程。目标是创建真实运动算例和马达特征，而不是用脚本假动画替代机械自由度。
 
+## 纯键帧机构动画的路由
+
+本文的马达和结果对象合同不应不加区分地套给纯 Animation 键帧算例。SW2026 SP0.0 模具平移机构的 AutoKey、原生拖动、保存重开后独立回放及 SW 内置 MP4 导出经验见 [原生动画](../subskills/solidworks-coursework/references/native-animation.md)。该案例不要求不存在的物理仿真结果对象，也不声称完成动力学分析；按实际算例类型与当前任务要求验收，能力等级仍以 `capabilities.yaml` 为准。
+
 ## 适用场景
 
 - 用户要求“新建运动算例”“Motion Study”“添加马达”“60RPM 匀速旋转”。
