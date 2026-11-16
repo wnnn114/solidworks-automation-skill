@@ -12,6 +12,7 @@
 | `solidworks-fillet-chamfer-cnc` | stable | CNC 安装座、参数/碰撞预检、语义选边、有界尺寸降级、孔槽和圆角口袋 | `subskills/solidworks-fillet-chamfer-cnc/SKILL.md` |
 | `solidworks-threaded-holes` | stable | M3-M12 螺纹孔、攻丝底孔、孔口倒角、螺纹属性和 STEP 输出 | `subskills/solidworks-threaded-holes/SKILL.md` |
 | `solidworks-engineering-drawing` | pilot | GB/T 第一角零件图/装配图、尺寸链、孔表、BOM、PDF/BMP 证据和制造交付审视 | `subskills/solidworks-engineering-drawing/SKILL.md` |
+| `solidworks-coursework` | pilot，SW2026 作业案例已验证 | 中文模具作业建模、单窗口与默认命名、装配修正、原生动画、报告限定工程图及图片同步 | `subskills/solidworks-coursework/SKILL.md` |
 | `autocad-automation` | stable | AutoCAD DWG/DXF 二维绘图、线稿矢量化、图层/文字/标注处理、导出和图纸自检 | `subskills/autocad-automation/SKILL.md` |
 
 ## 推荐路由
@@ -27,6 +28,10 @@
 ```
 
 ## 什么时候用哪个
+
+### solidworks-coursework
+
+用户提供模具图纸、工艺和上机报告，要求完整重做，或要求将修改后的工程图同步到原报告时使用。入口为 [SKILL.md](subskills/solidworks-coursework/SKILL.md)，按阶段读取建模、原生动画、工程图与报告参考。复用父技能和已有工程图子技能，不复制旧作业的尺寸、题号、文件数量或硬编码执行脚本。
 
 ### solidworks-vibecad
 
@@ -109,6 +114,8 @@ subskills/solidworks-engineering-drawing/SKILL.md
 注意：普通“照图画 CAD”的最终版只保留原图矢量化线条，不保留手工猜测的外围轮廓、五官椭圆、Logo 三角线、水波线、替代文字或图内审查说明。
 
 ## 子技能目录规范
+
+仅整理跨阶段工作流、没有新增执行器的子技能（如 `solidworks-coursework`）可只保留 `SKILL.md` 与实际需要的 `references/`。不为统一外观增加空脚本、空示例目录或重复入口文档；下列完整结构适用于具有独立执行器的子技能。
 
 新增子技能时保持：
 

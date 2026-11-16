@@ -6,6 +6,10 @@ metadata: { "openclaw": { "homepage": "https://github.com/wzyn20051216/solidwork
 
 # SolidWorks 自动化技能
 
+## 模具上机作业专项入口
+
+当任务同时提供模具图纸、工艺要求和上机报告，要求实际完成零件、装配、SW 内部动画及工程图，或要求同步后续修改时，先读取 [solidworks-coursework](subskills/solidworks-coursework/SKILL.md)。其中包含单个可见零件窗口、实际默认名称、报告限定出图范围、原生时间轴回放和报告附图同步流程；本用户不制作工程图坐标类表格的偏好也在该流程中说明。一般单零件任务无需加载整个作业流程。
+
 ## 快速开始
 
 ### 环境要求
@@ -125,6 +129,7 @@ with SolidWorksSession(version=2026) as session:
 | AutoCAD DWG/DXF 二维绘图、线稿转 CAD、批量改图 | `subskills/autocad-automation/scripts/acad_draw.py`、`subskills/autocad-automation/scripts/acad_review.py` | `subskills/autocad-automation/SKILL.md`、`subskills/autocad-automation/references/troubleshooting.md` |
 | 装配体操作、齿轮联动/铰链/可拖动运动配合 | `scripts/sw_assembly.py` | `references/assembly.md` |
 | Motion Study 运动算例、旋转马达与结果审计 | `scripts/sw_motion.py` | `references/motion-study.md`、`references/complex-mechanical-routing.md` |
+| 模具作业的建模、装配、原生动画、工程图与报告同步 | 复用上述专项封装，CAD 写操作串行执行 | [solidworks-coursework](subskills/solidworks-coursework/SKILL.md) |
 | 工程图出图 | `scripts/sw_drawing.py` | `references/drawing.md` |
 | 文件导出 | `scripts/sw_export.py` | `references/export.md` |
 | 配置族创建/激活、参数修改与自定义属性 | `scripts/sw_document_data.py` | `references/advanced.md` |
@@ -179,7 +184,7 @@ from sw_connect import connect_solidworks, mm, deg, new_document
 **齿轮路由门禁：** 当用户说“画/建模/生成齿轮”时，先读取 `references/gears.md`，不得把实体齿轮需求替换成 Gear Mate。只有标准外啮合直齿轮且已知模数、齿数、压力角、齿宽和轴孔时，才使用 `scripts/sw_gear.py`；制造任务不得臆造参数，仅做视觉 demo 时可显式声明默认值。斜齿、锥齿、内齿、齿条、蜗轮蜗杆、变位或生产级修形/侧隙必须转专用路线或人工复核，不强套标准直齿轮脚本。“齿轮联动/传动/配合”才路由到 `sw_assembly.add_gear_mate_by_cylinders()`。
 
 9. 普通盲孔、通孔、圆柱沉孔、锥形沉头孔、半圆端槽或孔阵列任务，读取 `references/complex-hole-features.md` 并优先调用 `scripts/sw_hole_features.py`；创建参数证据必须再与 `collect_geometry_measurements()`、`validate_hole_positions()` 和剖视图交叉复核。
-10. SolidWorks 零件图、装配图、GB/T 工程图、尺寸链、孔表、BOM、标题栏或工程图审视任务，先读取 `subskills/solidworks-engineering-drawing/SKILL.md`；该子技能消费根技能的模型、孔槽和属性证据。AutoCAD 的 DWG/DXF、二维图纸、线稿转 CAD、批量改图或 AutoCAD 原生预览任务，读取 `subskills/autocad-automation/SKILL.md`。机械/3D 打印开孔交付必须按可制造图纸处理：所有孔、槽、接口、水口、螺丝孔和螺丝柱同时给出规格、数量和定位尺寸；图面拥挤时用孔表/槽表，不得用长引线替代关键尺寸。
+10. SolidWorks 零件图、装配图、GB/T 工程图、尺寸链、孔表、BOM、标题栏或工程图审视任务，先读取 `subskills/solidworks-engineering-drawing/SKILL.md`；该子技能消费根技能的模型、孔槽和属性证据。AutoCAD 的 DWG/DXF、二维图纸、线稿转 CAD、批量改图或 AutoCAD 原生预览任务，读取 `subskills/autocad-automation/SKILL.md`。机械/3D 打印开孔交付必须按可制造图纸处理：所有孔、槽、接口、水口、螺丝孔和螺丝柱同时给出规格、数量和定位尺寸；图面拥挤先调整图幅、比例、视图及标注布局，仅在用户允许时采用孔表/槽表，不得用长引线替代关键尺寸。用户禁止坐标表时不能以模板默认恢复该类表格。
 11. 当用户要求真实产品“原版外观”“1:1 复刻”“不像概念版”，先读取 `references/mesh-reference-import.md`：公开网格/蓝图参考优先，不要在低保真手搓底稿上反复精修；需要导入 OBJ/STL 时优先用 `scripts/sw_import_mesh_reference.py`。
 12. 如果必须由大模型生成 VBA 宏，先使用 `sw_macro_guard.py` 做模型分流、代码校验、重试和本地模板兜底。
 13. 使用 `session.export()` 或 `sw_export.py` 保存/导出文件。
@@ -195,7 +200,7 @@ from sw_connect import connect_solidworks, mm, deg, new_document
 1. 不把“看得懂的示意图”当成“能制造的工程图”。只要涉及开孔、开槽、接口、装配孔或打印外壳，必须补齐外形尺寸、壁厚/底厚、孔槽规格和定位尺寸。
 2. 用户要求“中国常用格式”“国标风格”“严格规范”时，必须采用国内机械制图习惯：规范图幅/图框/标题栏、仿宋中文、分层线型、中心线/虚线、真实标注实体和技术要求。
 3. 长引线只能做局部说明，不能替代尺寸链；不得跨视图、压孔、压中心线、压尺寸文字或侵入标题栏。
-4. 密集孔槽必须优先用孔表、槽表或孔槽明细表，表内写清部位、规格、数量和定位；表格不能成为逃避定位尺寸的借口。
+4. 密集孔槽仍须表达部位、规格、数量和定位。先遵守用户的表格约束；允许时可采用孔表、槽表或明细表，禁止坐标表时用正常视图、局部/剖视及尺寸布局表达，不自动加回坐标类表格。表格与禁表要求都不能成为省略必要尺寸的理由。
 5. 交付前必须目视复核预览图，发现漏标、重叠、压线或标题栏侵入时先返工再汇报。
 
 ### 高还原外观/公开网格参考模型
@@ -250,8 +255,8 @@ from sw_connect import connect_solidworks, mm, deg, new_document
 4. 齿轮传动用真实 Gear Mate，不用脚本假动画冒充机械配合。
 5. 创建后用 `collect_mate_feature_summary()` 或特征树遍历验证 MateGroup 下存在 `MateConcentric`、`MateGearDim` 等真实 Mate 特征。
 6. 需要真实运动算例时，优先复用 `sw_motion.create_motion_study()`、`add_constant_speed_rotary_motor_by_cylinders()`、`calculate_and_play()` 创建 Motion Study 和马达。
-7. 计算后调用 `sw_motion.validate_motion_studies()` 或 MCP `solidworks_validate_motion_study`，检查类型、时长、马达数量、结果存在性和 `results_out_of_date=False`；只看到时间轴、动画或 `Calculate=True` 不算验收通过。
-8. 需要演示动画时可以额外脚本驱动组件位姿或 Mate Controller，但必须说明动画演示不等同于交互自由度；最终以 SolidWorks 中可拖动为准。
+7. 按实际算例类型验收。马达/求解流程调用 `sw_motion.validate_motion_studies()` 或 MCP `solidworks_validate_motion_study` 核对类型、时长、所需马达及结果是否过期；需要物理结果时验证结果对象。纯键帧 Animation 不套用不存在的仿真结果对象要求，必须保存重开、以不含位姿 setter 的时间跳转读取实际显示变换，详见 [原生动画](subskills/solidworks-coursework/references/native-animation.md)。仅时间轴、计划矩阵或 `Calculate=True` 都不足以证明完成。
+8. 脚本驱动位姿或 Mate Controller 可用于用户允许的演示，但不能替代用户要求保存及录制的 SW 原生动画；交互自由度、原生时间轴和导出视频分别核验。
 
 ## GPT / Kimi / Claude 多模型策略
 
