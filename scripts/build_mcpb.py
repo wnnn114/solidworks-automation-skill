@@ -10,10 +10,10 @@ import zipfile
 
 try:
     from .build_skill_release import release_version
-    from .sync_bundled_skill import ROOT, collect_runtime_files
+    from .sync_bundled_skill import ROOT, collect_runtime_files, validate_public_payload
 except ImportError:
     from build_skill_release import release_version
-    from sync_bundled_skill import ROOT, collect_runtime_files
+    from sync_bundled_skill import ROOT, collect_runtime_files, validate_public_payload
 
 EXTRA_FILES = ("manifest.json", "pyproject.toml", "uv.lock", "LICENSE", "config/runtime.example.json")
 REQUIRED_FILES = {
@@ -46,6 +46,7 @@ def build_mcpb(root: Path, output: Path) -> int:
         if not source.resolve(strict=True).is_relative_to(root):
             raise ValueError(f"MCPB 源文件越出仓库: {name}")
         payload[name] = source.read_bytes()
+    validate_public_payload(payload)
 
     manifest = json.loads(payload["manifest.json"])
     if manifest.get("manifest_version") != "0.4" or manifest.get("version") != release_version(root):
