@@ -10,9 +10,9 @@ import subprocess
 import zipfile
 
 try:
-    from .sync_bundled_skill import ROOT, collect_runtime_files
+    from .sync_bundled_skill import ROOT, collect_runtime_files, validate_public_payload
 except ImportError:
-    from sync_bundled_skill import ROOT, collect_runtime_files
+    from sync_bundled_skill import ROOT, collect_runtime_files, validate_public_payload
 
 PREFIX = "solidworks-automation/"
 MANIFEST = "RELEASE-MANIFEST.json"
@@ -54,6 +54,7 @@ def build_skill_archive(root: Path, output: Path, *, source_commit: str | None =
         if not source.resolve(strict=True).is_relative_to(root):
             raise ValueError(f"技能包源文件越出仓库: {relative}")
         payload[relative.as_posix()] = source.read_bytes()
+    validate_public_payload(payload)
     manifest = {"schemaVersion": "1.0", "version": version, "sourceCommit": source_commit,
                 "files": {name: {"sha256": _digest(data), "sizeBytes": len(data)} for name, data in payload.items()}}
     payload[MANIFEST] = (json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")

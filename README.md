@@ -344,7 +344,6 @@ SolidWorks 按上述能力清单核对。AutoCAD 真机证据覆盖对应的 202
 
 ---
 
-<sub>关注抖音 @balance. · 嵌入式开发、SolidWorks 自动化和 AI 辅助工程实践持续更新</sub>
 
 ### 装配干涉检查 API
 
