@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import zipfile
 import shutil
+import subprocess
 
 import pytest
 
@@ -27,8 +28,8 @@ def source_tree(root):
     (root / "profiles/drc/part.json").write_text("{}", encoding="utf-8")
     (root / "scripts/__pycache__").mkdir()
     (root / "scripts/__pycache__/cached.pyc").write_bytes(b"cache")
-    (root / ".git").mkdir()
-    (root / ".git/config").write_text("private fixture", encoding="utf-8")
+    subprocess.run(["git", "init", "--quiet"], cwd=root, check=True)
+    subprocess.run(["git", "add", "."], cwd=root, check=True)
 
 
 def test_release_archive_contains_runtime_and_reproducible_manifest(tmp_path):
@@ -77,6 +78,19 @@ def test_release_rejects_mixed_skill_and_desktop_versions(tmp_path):
     (tmp_path / "package.json").write_text('{"version":"2.0.0"}', encoding="utf-8")
     with pytest.raises(ValueError, match="版本"):
         build_skill_archive(tmp_path, tmp_path / "mismatch.zip", source_commit="a"*40)
+
+
+def test_skill_zip_excludes_untracked_notes_and_rejects_private_extra_docs(tmp_path):
+    root = tmp_path / "source"
+    source_tree(root)
+    (root / "scripts/operator-notes.md").write_text("private local notes", encoding="utf-8")
+    output = tmp_path / "clean.zip"
+    build_skill_archive(root, output, source_commit="a" * 40)
+    with zipfile.ZipFile(output) as archive:
+        assert PREFIX + "scripts/operator-notes.md" not in archive.namelist()
+    (root / "docs/CAD_STUDIO_USER_MANUAL.md").write_text("private-person" + "@qq.com", encoding="utf-8")
+    with pytest.raises(ValueError, match="发布隐私检查失败"):
+        build_skill_archive(root, tmp_path / "private.zip", source_commit="a" * 40)
 
 
 def test_archive_does_not_follow_sources_outside_repository(tmp_path, monkeypatch):

@@ -9,7 +9,7 @@ status: in-progress
 updated: 2026-10-27
 summary: 面向 Codex、Claude 与 OpenClaw 的 SolidWorks 自动化技能总仓，支持零件建模、装配、工程图、导出、自审查、本地 MCP 工具调用；桌面端为 Tauri + React 的 CAD Studio（早期 PySide6 原型已归档为遗留）。
 
-cover: assets/douyin-balance.jpg
+cover: apps/workbench-ui/src-tauri/icons/icon.png
 readme: README.md
 
 links:
