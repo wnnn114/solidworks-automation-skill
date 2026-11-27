@@ -21,7 +21,7 @@ metadata: { "openclaw": { "os": ["win32"], "requires": { "anyBins": ["python", "
 - `standard=GB_T` 默认使用 `projection=first_angle`。
 - GB/T + 第三角投影会被 `DrawingSpec` 前置检查阻断。
 - 所有孔、槽和接口必须有规格、数量和定位信息。
-- 先读取用户及项目的表格约束。用户不需要孔位/轮廓等坐标表时，不生成或恢复这类表格，改用正常视图和尺寸表达；装配 BOM、标题栏及原报告填写表格不因此删除。模具报告限定出图和同步最新附图的流程见 [工程图与报告同步](../solidworks-coursework/references/drawings-report.md)。
+- 按用户和项目的表格要求出图。需要省略坐标类表格时，用正常视图和尺寸表达，并按要求保留装配 BOM 与标题栏。关联尺寸、剖切与 BOM 细节见 [原生工程图](../solidworks-coursework/references/drawings.md)。
 - 工程图交付必须导出 PDF，并将每个 COM 尺寸位置与最终 PDF 的矢量文字框一一关联；PDF 缺失、解析器缺失、关联不完整或文字碰撞都会阻断或要求复核。
 - 本子技能不实现强化学习，也不暴露任意 Python/VBA 执行入口。
 

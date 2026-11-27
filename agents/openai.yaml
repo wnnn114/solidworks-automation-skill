@@ -1,7 +1,7 @@
 interface:
   display_name: "SolidWorks Automation"
-  short_description: "Automate SolidWorks CAD with Python COM"
-  default_prompt: "Use $solidworks-automation to create, edit, export, or troubleshoot SolidWorks CAD models with Python automation."
+  short_description: "SolidWorks parts, assemblies, animations, and drawings"
+  default_prompt: "Use $solidworks-automation to build SolidWorks parts and assemblies, create native animations, or produce engineering drawings."
 
 policy:
   allow_implicit_invocation: true
